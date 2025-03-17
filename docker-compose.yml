@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  app:  # This is the PHP-FPM container
+    image: drmartinel/bookverse:v1.0.6
+    depends_on:
+      - db
+    healthcheck:
+      test: [ "CMD", "php-fpm", "-t" ] # Test if php-fpm config is valid
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    environment:
+      - APP_ENV=production  # Or production
+      - APP-KEY=${APP_KEY}
+      - DB_HOST=db
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    env_file:
+      - .env
+
+  nginx: # This is the Nginx container
+    image: drmartinel/nginxbookverse:v1.0.1
+    ports:
+      - "80:80"   # Map port 80 on the host to port 80 in the container
+    depends_on:
+      - app     # Nginx depends on the PHP-FPM container
+
+  db: #MySQL Database
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env.db
+
+volumes:
+  db_data:
