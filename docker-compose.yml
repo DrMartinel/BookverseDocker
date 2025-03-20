@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:  # This is the PHP-FPM container
-    image: drmartinel/bookverse:v1.0.9
+    image: drmartinel/bookverse:latest
     depends_on:
       - db
     healthcheck:
@@ -20,7 +20,7 @@ services:
       - .env
 
   nginx: # This is the Nginx container
-    image: drmartinel/nginxbookverse:v1.0.0
+    image: drmartinel/nginxbookverse:latest
     ports:
       - "80:80"   # Map port 80 on the host to port 80 in the container
     depends_on:
